@@ -2,32 +2,28 @@ import React, { useState, useEffect } from 'react'
 import Message from './Message'
 
 // Chat over Pubsub
-import PubsubChat from '../../../common/libs/chat'
+// import PubsubChat from '../libs/chat'
 
 export default function Chat ({
   libp2p,
-  eventBus
+  ChatProtocol
 }) {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
   const [chatClient, setChatClient] = useState(null)
+  // eslint-disable-next-line
   const [peers, setPeers] = useState({})
 
   /**
    * Sends the current message in the chat field
    */
-  const sendMessage = async () => {
+  const sendMessage = () => {
     setMessage('')
     if (!message) return
+    // TODO: Iterate over all peers, and send messages to peers we are connected to.
 
-    if (chatClient.checkCommand(message)) return
-
-    try {
-      await chatClient.send(message)
-      console.info('Publish done')
-    } catch (err) {
-      console.error('Could not send message', err)
-    }
+    // Update the messages for the view
+    setMessages((messages) => [...messages, message])
   }
 
   /**
@@ -47,34 +43,16 @@ export default function Chat ({
     // Wait for libp2p
     if (!libp2p) return
 
-    // Create the pubsub chatClient
     if (!chatClient) {
-      const pubsubChat = new PubsubChat(libp2p, PubsubChat.TOPIC)
+      // TODO: Add the chat handler to libp2p
 
-      // Listen for messages
-      pubsubChat.on('message', (message) => {
-        if (message.from === libp2p.peerId.toB58String()) {
-          message.isMine = true
-        }
-        setMessages((messages) => [...messages, message])
-      })
-      // Listen for peer updates
-      pubsubChat.on('peer:update', ({ id, name }) => {
-        setPeers((peers) => {
-          const newPeers = { ...peers }
-          newPeers[id] = { name }
-          return newPeers
-        })
-      })
-      // Forward stats events to the eventBus
-      pubsubChat.on('stats', (stats) => eventBus.emit('stats', stats))
-
-      setChatClient(pubsubChat)
+      // Set the chat client to so the handler add code doesn't run again
+      setChatClient(true)
     }
   })
 
   return (
-    <div className='flex flex-column w-50 pa3 h-100 bl b--black-10'>
+    <div className='flex flex-column w-75 pa3 h-100 bl b--black-10'>
       <div className='w-100 flex-auto'>
         <ul className='list pa0'>
           {messages.map((message, index) => {

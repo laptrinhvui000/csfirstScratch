@@ -2,7 +2,7 @@
 import React, { useState, useEffect, createRef } from 'react'
 import cytoscape from 'cytoscape'
 import euler from 'cytoscape-euler'
-import { layout, style } from '../../../common/libs/viz'
+import { layout, style } from '../libs/viz'
 
 function Graph ({
   graphRoot
@@ -36,6 +36,7 @@ export default function Metrics ({
       })
 
       libp2p.peerStore.on('peer', (peerId) => {
+        console.log('peers', libp2p.peerStore.peers.size)
         const num = libp2p.peerStore.peers.size
         setPeerCount(num)
       })

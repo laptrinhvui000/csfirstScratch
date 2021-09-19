@@ -1,14 +1,15 @@
 /* eslint-env browser */
 import React, { useState, useEffect } from 'react'
 import EventEmitter from 'events'
-import Header from '../../../common/views/Header'
+import Header from './Header'
 import Metrics from './Metrics'
 import Chat from './Chat'
-import { getOrCreatePeerId } from '../../../common/libs/peer-id'
-import '../../../common/styles/index.css'
+import { getOrCreatePeerId } from '../libs/peer-id'
+import '../styles/index.css'
 
 export default function App ({
-  createLibp2p
+  createLibp2p,
+  ChatProtocol
 }) {
   const [peerId, setPeerId] = useState(null)
   const [libp2p, setLibp2p] = useState(null)
@@ -45,7 +46,7 @@ export default function App ({
       </div>
       <div className='flex h-100'>
         <Metrics libp2p={libp2p} eventBus={eventBus} />
-        <Chat libp2p={libp2p} eventBus={eventBus} />
+        <Chat libp2p={libp2p} eventBus={eventBus} ChatProtocol={ChatProtocol} />
       </div>
     </div>
   )
