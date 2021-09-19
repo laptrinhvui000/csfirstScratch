@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel $INIT_CWD/index.html -d ./dist",
+    "start": "parcel index.js",
     "lint": "standard"
   },
   "keywords": [],
